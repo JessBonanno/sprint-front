@@ -8,14 +8,21 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => ({
     projectDetailsContainer: {
         margin: theme.spacing(3),
+    },
+    heading: {
+        margin: theme.spacing(3),
+    },
+    actionsTitle: {
+        margin: theme.spacing(1),
     }
 }))
 
 
-const ProjectDetails = ({projectId}) => {
+const ProjectDetails = () => {
     const param = useParams();
     const classes = useStyles();
     const [actions, setActions] = useState([]);
+    const [project, setProject] = useState('')
 
     useEffect(() => {
         if (param) {
@@ -28,19 +35,28 @@ const ProjectDetails = ({projectId}) => {
                     console.log(err);
                 })
         }
+
+        axios.get(`http://localhost:4000/api/projects/${param.id}`)
+            .then(res => {
+                setProject(res.data.name)
+            }).catch(err => {
+            console.log(err);
+        })
     }, [])
 
     return (
         <Grid container direction={"row"} className={classes.projectDetailsContainer}>
-            <Grid item></Grid>
-            <Typography variant={"h3"}>Project Details</Typography>
+            <Grid item className={classes.heading}> <Typography variant={"h4"}>{project} Project Details</Typography>
+            </Grid>
             <Grid item className={classes.projectDetailsItem}>
                 {actions && actions.map(a => {
                     return (<>
                         <Grid container direction={'column'} className={classes.actionsContainer}>
-                            <Grid item className={classes.actionsItem}><Typography variant={'h4'}>{a.description}</Typography></Grid>
-                            <Grid item><Typography variant={'h5'}>{a.notes}</Typography></Grid>
-                            <Grid item><Typography variant={'h5'}>{a.completed ? "Completed" : "incomplete"}</Typography></Grid>
+                            <Grid item className={classes.actionsTitle}><Typography
+                                variant={'h5'}>{a.description}</Typography></Grid>
+                            <Grid item><Typography variant={'h6'}> * {a.notes}</Typography></Grid>
+                            <Grid item><Typography
+                                variant={'p'}> * {a.completed ? "Completed" : "Incomplete"}</Typography></Grid>
                         </Grid> </>)
                 })}
             </Grid>
