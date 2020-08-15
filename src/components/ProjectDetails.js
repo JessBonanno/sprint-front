@@ -12,6 +12,10 @@ const useStyles = makeStyles(theme => ({
     heading: {
         margin: theme.spacing(3),
     },
+    actionsHeader: {
+        margin: theme.spacing(6, 2, 2)
+    },
+
     actionsTitle: {
         margin: theme.spacing(1),
     }
@@ -38,23 +42,28 @@ const ProjectDetails = () => {
 
         axios.get(`http://localhost:4000/api/projects/${param.id}`)
             .then(res => {
-                setProject(res.data.name)
+                console.log(res.data)
+                setProject(res.data)
             }).catch(err => {
             console.log(err);
         })
     }, [])
 
     return (
-        <Grid container direction={"row"} className={classes.projectDetailsContainer}>
-            <Grid item className={classes.heading}> <Typography variant={"h4"}>{project} Project Details</Typography>
+        <Grid container direction={"column"} className={classes.projectDetailsContainer}>
+            <Grid item className={classes.heading}> <Typography variant={"h4"}>{project.name} Project
+                Details</Typography>
             </Grid>
+            <Grid item><Typography variant={"h6"}>{project.description}</Typography><Typography
+                variant={'p'}> * {project.completed ? "Completed" : "Incomplete"}</Typography></Grid>
             <Grid item className={classes.projectDetailsItem}>
+                <Typography variant={'h5'} className={classes.actionsHeader}>Actions for project</Typography>
                 {actions && actions.map(a => {
                     return (<>
                         <Grid container direction={'column'} className={classes.actionsContainer}>
                             <Grid item className={classes.actionsTitle}><Typography
-                                variant={'h5'}>{a.description}</Typography></Grid>
-                            <Grid item><Typography variant={'h6'}> * {a.notes}</Typography></Grid>
+                                variant={'h6'}>{a.description}</Typography></Grid>
+                            <Grid item><Typography variant={'p'}> * {a.notes}</Typography></Grid>
                             <Grid item><Typography
                                 variant={'p'}> * {a.completed ? "Completed" : "Incomplete"}</Typography></Grid>
                         </Grid> </>)

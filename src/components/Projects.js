@@ -1,14 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {Grid} from "@material-ui/core";
+import {Grid, Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 
 
 const useStyles = makeStyles(theme => ({
     projectsContainer: {
         margin: theme.spacing(3),
-    }
+    },
+    project: {
+        color: 'gray',
+        margin: theme.spacing(2),
+    },
 }))
 
 
@@ -20,16 +24,23 @@ const Projects = () => {
 
     useEffect(() => {
         console.log('test')
-    axios.get("http://localhost:4000/api/projects")
-    .then(res => {
-        console.log(res)
-        setProjects(res.data)
-    })
-}, [])
+        axios.get("http://localhost:4000/api/projects")
+            .then(res => {
+                console.log(res)
+                setProjects(res.data)
+            })
+    }, [])
 
     return (
         <Grid container direction={"column"} className={classes.projectsContainer}>
-            {projects && projects.map(p => <Grid item component={Link} to={`/project-details/${p.id}`}><p>{p.name}</p></Grid>)}
+            {projects && projects.map(p => {
+                return (
+                    <Grid item className={classes.project} component={Link}
+                          to={`/project-details/${p.id}`}><Typography
+                        variant={'h6'}>{p.name}</Typography></Grid>
+                )
+
+            })}
         </Grid>
     );
 }
